@@ -1,18 +1,18 @@
 # chicago-bikes-analysis
 - The Chicago bike data seems to be in good condition and contains lots of entries and with lots of useful data. The data used is from *January 2021* up to *December 2021*.
-- All combined R file is **chicago.R**.
+- All combined R file is **'chicago-bikeshare-analysis.R'**.
 
 - Open RStudio/R-GUI.
 - Install the tidyverse package(if not already installed)
 - Then call the tidyverse, dplyr for data manipulation, ggplot2 for visualizations, lubridate for date functions, tidyr for data cleaning functions. [although all are already included in the tidyverse, its good practice to call the libraries.]
 
-**DATA LOADING**: Use the **load_data.R** script. Then the data is loaded into RStudio as dataframes for further steps.
+**DATA LOADING**: Use the **'load_data.R'** script. Then the data is loaded into RStudio as dataframes for further steps.
 * Create a datasets folder in the RStudio project.
 * Upload the zipped 12 csv files into the folder.
 * Read all months csv/excel from local computer folder into datframe with the read_csv/read_excel function with the path set to the project dataset folder that was created.
 * Bind all the datframes into a single one for compiled 2021 yearly data.
 
-**DATA PREPARATION & CLEANUP**: Use the **prep_data.R** script.
+**DATA PREPARATION & CLEANUP**: Use the **'prep_data.R'** script.
 * Drop the NA values from all the important anlysis columns that are: ride_id, started_at, ended_at, member_casual.
 * New column values can be inserted into the dataframe by two main methods: simple column assignment and mutate() function.
 * A month column is added by simple assignment. The format function changes the date format into the month string.
@@ -25,7 +25,7 @@
 * This distance is converted to km by dividing by 1000.
 * A ride_speed column is added by dividing the ride_distance by the ride_length(converted to number of hours).
 
-**DESCRIPTIVE ANALYSIS**: Use the **analysis.R** script.
+**DESCRIPTIVE ANALYSIS**: Use the **'analysis.R'** script.
 
 **1)** ***Over year user-type stats***:
 * A pipeline is created to sumaarize the avg ride length, distance and the number of rides taken by members and casuals over the year.
