@@ -1,4 +1,4 @@
-tripdata_2021 <- drop_na(tripdata_2021, ride_id, started_at, ended_at, member_casual)
+tripdata_2021 <- drop_na(tripdata_2021, ride_id, started_at, ended_at, member_casual )
 
 library(lubridate)
 tripdata_2021$month <- format(as.Date(tripdata_2021$started_at), "%B")
