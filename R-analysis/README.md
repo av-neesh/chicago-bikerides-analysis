@@ -1,7 +1,9 @@
 # chicago-bikes-analysis
 - The Chicago bike data seems to be in good condition and contains lots of entries and with lots of useful data. The data used is from *January 2021* up to *December 2021*.
 - All combined R file is **'chicago-bikeshare-analysis.R'**.
+- Open the Jupyter Notebook for more interactive code and viz'z.
 
+*Steps:*
 - Open RStudio/R-GUI.
 - Install the tidyverse package(if not already installed)
 - Then call the tidyverse, dplyr for data manipulation, ggplot2 for visualizations, lubridate for date functions, tidyr for data cleaning functions. [although all are already included in the tidyverse, its good practice to call the libraries.]
