@@ -1,6 +1,6 @@
 # bike-sharing-analysis with SQL and Tableau
 - Use the SQL scripts for the following steps in MySQL.
-- Also, Tableau Desktop Version was used for creating visulizations. The workbooks are on [my Tableau Public page](https://public.tableau.com/app/profile/avneesh.) and in Tableau_proj folder also as .twb files.
+- Also, Tableau Desktop Version was used for creating visulizations. The workbooks are on [Tableau Public](https://public.tableau.com/app/profile/avneesh.) and in Tableau_proj folder also as .twb files.
 
 **LOADING AND PROCESSING DATA**:
 
