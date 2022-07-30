@@ -1,7 +1,7 @@
 # chicago-bikes-analysis with **R**
 - The Chicago bike data seems to be in good condition and contains lots of entries and with lots of useful data. The data used is from *January 2021* up to *December 2021*.
 - All combined R file is **'chicago-bikeshare-analysis.R'**.
-- Open the Jupyter Notebook for more interactive code and viz'z.
+- Open the [Kaggle Markdown](https://www.kaggle.com/code/avneeshsingh19/chicago-bikeshare-analysis/notebook) or the .ipynb notebook in this directory for more interactive code and viz's.
 
 *Steps:*
 - Open RStudio/R-GUI.
