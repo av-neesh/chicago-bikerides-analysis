@@ -3,7 +3,7 @@
 I have used 4 tools to analyse the data, and documented my steps and findings:
 
 - #### **Excel :**  [GitHub]()
-- #### **MySQL & Tableau Desktop :**  [R-Pubs](https://rpubs.com/Avneesh/928547) / [GitHub](https://github.com/av-neesh/chicago-bikes-analysis/tree/main/SQL%2BTableau-analysis)
+- #### **MySQL & Tableau Desktop :**  [R-Pubs](https://rpubs.com/Avneesh/928547) / [GitHub](https://github.com/av-neesh/chicago-bikes-analysis/tree/main/SQL%2BTableau-analysis) / [Tableau Public](https://public.tableau.com/app/profile/avneesh.)
 - #### **R Studio :**  [Kaggle](https://www.kaggle.com/code/avneeshsingh19/chicago-bikeshare-analysis) / [GitHub](https://github.com/av-neesh/chicago-bikes-analysis/tree/main/R-analysis)
 
 ### **THE TASK:**
