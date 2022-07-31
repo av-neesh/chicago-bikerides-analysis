@@ -128,7 +128,7 @@
 ***Conclusions*** :
 * The visualization suggests that most of the members start and end their rides in the urban areas of the cities, not going far from the main city. While for casuals, most of rides though they start from the inner city, the rides are likely to end at suburban and outer parts of the city.
 
-[**SQL SCRIPT**] We also run a SQL query to find out the most popular bike ride routes for both casuals and members. Here are the results:
+[**SQL SCRIPT**](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/analysis.sql) We also run a SQL query to find out the most popular bike ride routes for both casuals and members. Here are the results:
 
 **Members**: [CSV Table](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/Tables/member_pop_routes.csv)
 	
