@@ -1,37 +1,81 @@
--CHICAGO BIKE SHARING DATA gathered from dataset link: https://divvy-tripdata.s3.amazonaws.com/index.html
+# bike-share analysis with Excel
 
--Unzip the files and create subfolders for the .CSV file and the .XLS or Sheets file so that you have a copy of the original data.
+CHICAGO BIKE SHARING DATA gathered from dataset: [link](https://divvy-tripdata.s3.amazonaws.com/index.html).
 
--select all on top left, then auto adjust column width
--freeze top row
--conditional format member/casual color(optional)
--choose to Save As an Excel Workbook file
--create 'month' column, and put formula =MONTH(E2) to extract the month serial number of the rides started_at time. Then format the cell as custom 'mmmm' format to extract the month string coressponding to the serial number.(optional)
--create a column called “ride_length.” ” Calculate the length of each ride by subtracting the column “started_at” from the column “ended_at” (for example, =D2-C2) and format as HH:MM:SS using Format > Cells > Time > 37:30:55.
--create a column 'day_of_week' by formula =C2 to identify the starting day of week and then formatting it as 'dddd' format[to obtain string]. / or formula =WEEKDAY(C2,1) and then format as general can be used directly to extract the weekday serial number.
--repeat for every month.
+### **DATA LOADING AND PROCESSING**
 
-CLEANING IN EXCEL
--create new ride_id column left of the existing with formula =TRIM(B1) ,ie. remove whitespaces from ride_id and then copy and paste as values. Then delete the previous column.
--remove duplicate rows: data->data cleanup->remove duplicates.
--at end row of spreadsheet formula =COUNTIF(A1:A10393,"") in all attributes, to find the number of empty cells. If any of the main analysis attribute(i.e., ride_id, started_at, ended_at, member_casual) cell values are missing, delete that row.
--format each column to the appropriate data type(can be done further in SQL & Tableau too while importing data).
+- Unzip the files and create subfolders for the .CSV file and the .XLS or Sheets file so that you have a copy of the original data.
+- select all on top left, then auto adjust column width
+- freeze top row
+- conditional format member/casual color(optional)
+- choose to Save As an Excel Workbook file
+- create 'month' column, and put formula =MONTH(E2) to extract the month serial number of the rides started_at time. Then format the cell as custom 'mmmm' format to extract the month string coressponding to the serial number.(optional)
+- create a column called “ride_length.” ” Calculate the length of each ride by subtracting the column “started_at” from the column “ended_at” (for example, =D2-C2) and format as HH:MM:SS using Format > Cells > Time > 37:30:55.
+- create a column 'day_of_week' by formula =C2 to identify the starting day of week and then formatting it as 'dddd' format[to obtain string]. / or formula =WEEKDAY(C2,1) and then format as general can be used directly to extract the weekday serial number.
+- repeat for every month.
 
--select ride_length column values, and name the array 'ride_length', 'member_casual', 'start_station_name', etc. in Excel.
--determine the max, avg of the ride_length array.
--determine the mode of the day_of_weeek and then format it as a 'dddd' format.
--name the member_casual array, and then formula =AVERAGEIF(member_casual,"member"/"casual",ride_length) and then format into h:m:s format, to find the average ride length of member and casual riders.[will do in pivot table too]
--calculate the mode of ride_length, and then for member and casual separately using formula =MODE(IF(member_casual="member"/"casual",ride_length,))
--calculate the mode of start_station_name, and then for member and casual separately using formula =MODE(IF(member_casual="member"/"casual",start_station_name,))
+### **DATA CLEANING IN EXCEL**
+- create new ride_id column left of the existing with formula
+	
+		=TRIM(B1)
+	
+  ,ie. remove whitespaces from ride_id and then copy and paste as values. Then delete the previous column.
+- remove duplicate rows:
 
-PIVOT TABLE(for month data)
--convert the dataset into a table.
--Rows=member_casual,rideable_type; Values=Count of ride_id,Sum of ride_length{format it into dd hh:mm:ss format}[show values as 5 of grand total],Average of ride_length{format as mm:ss}; Columns=Values(automatically created)----> to summarize the time spent on bike types by both casuals and members.
--Rows=member_casual,ride_length; Values=Count of ride_id; then create a PivotChart of the same and add a Moving Average trendline with high period. Modes of the member and casual rider length can be seen easily.
--Rows:member_casual,day_of_week; Values=Count of ride_id,Sum of ride_length{format it into dd hh:mm:ss format}[for both attributes, show the values as percentages of grand total],Average of ride_length{format in mm:ss}[show value by no calcualtion]; Columns=Values(automatically created); then create a PivotChart line type to summarize the number of rides and the total time spent on a daily trend.
--Rows=start_station_name; Columns=member_casual; Values=Count of ride_id; Filter=start_station_id[to remove all the blank station names, as the station and id are missing for the same row values]; then sort either the member or casual elements(sort sheet by casual in this case); then make a line chart---->to find the most used stations
--Rows=started_at{days,hours,minutes created automatically}; Columns=member_casual,Values{created automatically}; Values=Count of ride_id, Sum of ride_length[both are show values as % of grand total], Average of ride_length[format set as mm:ss]; then a PivotChart creted, and add a trend line to members and casuals's average ride lengths----> to understand the daily trends of rides over the month.
--Rows=Hours,Minutes,started_at[minutes and started_at are optional, as they don't do anything]; Columns=member_casual; Values=Count of ride_length; and then create a PivotChart with trendlines on both meber and casual----> to understand the hourly commute patterns on an average day.
+		Data-> Data Cleanup-> Remove duplicates.
+
+- at end row of spreadsheet formula
+
+		=COUNTIF(A1:A10393,"")
+
+  ,in all attributes, to find the number of empty cells. If any of the main analysis attribute(i.e., ride_id, started_at, ended_at, member_casual) cell values are missing, delete that row.
+- format each column to the appropriate data type(can be done further in SQL & Tableau too while importing data).
+
+### **DESCRIPTIVE ANALYSIS**
+- select ride_length column values, and name the array 'ride_length', 'member_casual', 'start_station_name', etc. in Excel.
+- determine the max, avg of the ride_length array.
+- determine the mode of the day_of_weeek and then format it as a 'dddd' format.
+- name the member_casual array, and then formula
+	
+		= AVERAGEIF(member_casual, "member"/"casual", ride_length)
+
+  ,and then format into hh:mm:ss format, to find the average ride length of member and casual riders (done in PivotTable 5 too).
+- calculate the mode of ride_length, and then for member and casual separately using formula
+
+		= MODE(IF(member_casual="member"/"casual", ride_length,))
+		
+- calculate the mode of start_station_name, and then for member and casual separately using formula
+
+		= MODE(IF(member_casual= "member"/"casual", start_station_name,))
+
+### **PIVOT TABLE ANALYSIS (for month data)***
+
+First convert the dataset into a table.
+
+***PivotTable 1*** ----> to summarize the time spent on bike types by both casuals and members.
+
+		Rows = member_casual,rideable_type;
+		Values = Count of ride_id, Sum of ride_length {format it into dd hh:mm:ss format}[show values as % of grand total],
+			 Average of ride_length {format as mm:ss};
+		Columns = Values(automatically created)
+		
+***PivotTPivotTable 2*** ----> to visulaize the ride length distribution. Modes of the member and casual rider length can be seen easily.
+
+		Rows = member_casual,ride_length;
+		Values = Count of ride_id;
+		then create a PivotChart of the same and add a Moving Average trendline with high period.
+		
+***PivotTable 3*** ----> to summarize the number of rides and the total time spent on a daily trend.
+
+		Rows = member_casual,day_of_week;
+		Values = Count of ride_id, Sum of ride_length {format it into dd hh:mm:ss format}[for both attributes, show the values as % of grand total],
+			 Average of ride_length {format in mm:ss} [show value by no calcualtion];
+		Columns=Values(automatically created);
+		then create a PivotChart line type.
+		
+- Rows=start_station_name; Columns=member_casual; Values=Count of ride_id; Filter=start_station_id[to remove all the blank station names, as the station and id are missing for the same row values]; then sort either the member or casual elements(sort sheet by casual in this case); then make a line chart---->to find the most used stations
+- Rows=started_at{days,hours,minutes created automatically}; Columns=member_casual,Values{created automatically}; Values=Count of ride_id, Sum of ride_length[both are show values as % of grand total], Average of ride_length[format set as mm:ss]; then a PivotChart creted, and add a trend line to members and casuals's average ride lengths----> to understand the daily trends of rides over the month.
+- Rows=Hours,Minutes,started_at[minutes and started_at are optional, as they don't do anything]; Columns=member_casual; Values=Count of ride_length; and then create a PivotChart with trendlines on both meber and casual----> to understand the hourly commute patterns on an average day.
 
 -Pivot Table and Charts are made for the months: January, March, June & September.
 -These plots are saved in a folder by: Copying the Excel plots; Pasting as a picture in Word; Save the plot as a picture in a plots folder.
