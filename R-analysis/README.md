@@ -36,6 +36,7 @@
 * The average ride length are calculated by summarizing the mean of the grouped member_casual column.
 * Each of the stats are visualized by the ggplot2 library.
 * The package gridExtra is installed as it contains the grid.arrange function, that places different plot objects in a grid specified by either the number of rows or/and columns.
+
 ![year_ridetype](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/R-analysis/R_Plots/year_ridetype.png)
 
 -> **Conclusions** :
@@ -48,6 +49,7 @@
 * The results are then arranged first by the numeric format month and then by user type.
 * The individual plots for each summarized value is in a side-by-side column graph [i.e, a dodged position, instead of the default stacked position.]
 * The viz's are displayed in a row-wise grid with the grid.arrnage function.
+
 ![month_usertype](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/R-analysis/R_Plots/month_usertype.png)
 
 -> **Conclusions** :
@@ -58,6 +60,7 @@
 * A pipeline is for the same three summarized observations from data.
 * For the same string arranging discrepancies, the numeric weekday umber column is added via the pipeline by the mutate function.
 * Individual plots are created and the arranging of the plot objects is done side-by-side in 3 columns.
+
 ![weekday_usertype](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/R-analysis/R_Plots/weekday_usertype.png)
 
 -> **Conclusions** :
@@ -65,6 +68,7 @@
 
 **4)** ***Over year ride-type stats***:
 * The whole pipeline visualizes the total rides taken by each ride type and each by the user type.
+
 ![year_ridetype](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/R-analysis/R_Plots/year_ridetype.png)
 
 -> **Conclusions** :
@@ -74,6 +78,7 @@
 **5)** ***Over week ride-type stats***:
 * As the docked bikes are not used by the members and casuals use them very less, they are filtered out from the pipe.
 * Number of each bike type ride grouped the user type over the average week is calculated and visualized by the pipe.
+
 ![weekday_ridetype](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/R-analysis/R_Plots/weekday_ridetype.png)
 
 -> **Conclusions** :
@@ -87,6 +92,7 @@
 * Chicago bbox are selected as per the half of the screen ratio from bboxfinder.com.
 * A Chicago statenmap of terrain type is made, and then the casual and meber maps are created on top of it.
 * Both of the plots are placed side-by-side with the grid.arrange function.
+
 ![pop_routes_usertype](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/R-analysis/R_Plots/pop_routes_usertype.png)
 
 -> **Conclusions** :
