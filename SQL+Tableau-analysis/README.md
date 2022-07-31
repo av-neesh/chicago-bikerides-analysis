@@ -79,7 +79,6 @@
 - The data source is the MySQL server and the database is chosen as the created schema.
 - Use the option: *New Custom SQL* to run the SQL analysis scripts and automically load the results into the BI Sheet to visualize.
 
-
 **TABLEAU VIZ's + SQL SCRIPTS and ANALYSIS**:
 
 [**WORKBOOK 1**](https://public.tableau.com/app/profile/avneesh./viz/avg_month_analysis/Dashboard1): Created for avg ride lengths and number of trips over months of years using the [***'analysis.sql'***](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/analysis.sql) script.
