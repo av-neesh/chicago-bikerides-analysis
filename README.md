@@ -1,6 +1,6 @@
 # chicago-bike-sharing-analysis
 
-In this case-study, I used Chicago [bike-ride data](https://divvy-tripdata.s3.amazonaws.com/index.html) for year 2021 to evaluate ride patterns of different types of riders, determine trends and theorize the underlying causes. I was then able to develop conclusions and actions based on those findings.
+In this case-study, I used Chicago [bike-ride data](https://divvy-tripdata.s3.amazonaws.com/index.html) for the year 2021 to evaluate ride patterns of different types of riders, determine trends and theorize the underlying causes. I was then able to develop conclusions and actions based on those findings.
 
 I have used 4 tools to analyse the data, and documented my steps and findings:
 
