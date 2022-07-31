@@ -1,5 +1,5 @@
 # bike-sharing-analysis with SQL and Tableau
-- View the [***R-Pub Markdown***](https://rpubs.com/Avneesh/928547) for better format.
+- View the [***R-Pub Markdown***](https://rpubs.com/Avneesh/928547) or the [***.Rmd file***](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_markdown/SQL_Analysis_markdown.Rmd) for better format.
 - Use the SQL scripts for the following steps in **MySQL**.
 - Also, **Tableau Desktop** was used for creating visulizations. The workbooks are on [***Tableau Public***](https://public.tableau.com/app/profile/avneesh.) and in [***Tableau_proj***](https://github.com/av-neesh/chicago-bikes-analysis/tree/main/SQL%2BTableau-analysis/Tableau_proj) folder as .twb files.
 
