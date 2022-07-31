@@ -89,7 +89,8 @@
 *SHEET2*--> Columns: month_of_year; Rows: no_of_trips; Color: member_casual, Graph Type: Line.
 
 *DASHBOARD*--> Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
-* Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
+- Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
+![Dashboard 1](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/Tableau_proj/Tableau_Plots/Dashboard%201.png)
 
 ***Conclusions*** :
 * The no of trips taken across the year by both members and casuals has a peak in the middle of the year, ie, summers. While the trips drastically decrese during the winter months. This confirms the hypothesis that summers have  more number of riders and trips due to the breaks going in the period and also due to the fact it is a much more milder weather to usea  bike.
@@ -103,6 +104,7 @@
 
 *DASHBOARD*: Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
 * Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
+![Dashboard 2](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/Tableau_proj/Tableau_Plots/Dashboard%202.png)
 
 ***Conclusions*** :
 * The number of rides taken by mbers have a overall constant trend throughout the week, with some dip on the weekends, showing the high percentage of students and working people. While for casual riders, Saturdays are the highest rides taken. The weekend(+Friday) trend shows significant increase from the weekdays, thus the tourist/leisure percentage of casual riders.
@@ -121,13 +123,14 @@
 *SHEET4*--> Detail: end_lat, end_lng {latitude and longitude will be genertated}, Color: member_casual with sorted decsending.
 
 *DASHBOARD*--> stations side by side and start and end up & down, with flaoting color legend.
+![Dashboard 3](https://user-images.githubusercontent.com/110298158/182018392-e1cfe933-42bb-4af7-8678-0faf4af93e76.png)
 
 ***Conclusions*** :
 * The visualization suggests that most of the members start and end their rides in the urban areas of the cities, not going far from the main city. While for casuals, most of rides though they start from the inner city, the rides are likely to end at suburban and outer parts of the city.
 
 [**SQL SCRIPT**] We also run a SQL query to find out the most popular bike ride routes for both casuals and members. Here are the results:
 
-**Members**:
+**Members**: [CSV Table](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/Tables/member_pop_routes.csv)
 	
 		ride_count, 	avg_ride, 	member_casual, 	route
 		221070, 	00:20:55, 	member,  	to 
@@ -141,7 +144,7 @@
 		1860, 		00:08:48, 	member, 	Loomis St & Lexington St to Morgan St & Polk St
 		1809, 		00:15:10, 	member, 	Ellis Ave & 60th St to 
 
-**Casuals**:
+**Casuals**: [CSV Table](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/Tables/casual_pop_routes.csv)
 
 		ride_count, 	avg_ride, 	member_casual, 	route
 		202148, 	00:34:12, 	casual,  	to 
@@ -168,6 +171,7 @@
 *SHEET2*--> Duplicate the sheet1 and change the filter to casual only.
 
 *DASHBOARD*--> Make a side-by-side of both sheets without the legends or filter.
+![Dashboard 4](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/Tableau_proj/Tableau_Plots/Dashboard%204.png)
 
 ***Conclusions :***
 * It is evident that the casual avg rides of popular routes is greater than that of members. Also the distribution for casuals is much flatter, which means there is less difference between the popularity of routes, whereas the member popular routes are much more few and prominent.
@@ -182,6 +186,7 @@
 		3. MAKELINE([start_point],[end_point]) as the 'route_line'.
 
 *SHEET*--> Drag and drop the line onto the sheet. Also drop the start and end points onto the sheet as a **'Marks'** layer. Colour: member_casual.
+![Dashboard 5 casual](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/Tableau_proj/Tableau_Plots/Dashboard%205%20casual.png)![Dashboard 5 member](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/Tableau_proj/Tableau_Plots/Dashboard%205%20member.png)
 
 ***Conclusions :***
 * It is not very evident as only top 250 rides were taken into account. Most of the rides are concentrated on the harbor.
