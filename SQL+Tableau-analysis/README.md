@@ -1,82 +1,105 @@
 # bike-sharing-analysis with SQL and Tableau
-- Use the SQL scripts for the following steps in MySQL.
-- Also, Tableau Desktop Version was used for creating visulizations. The workbooks are on [Tableau Public](https://public.tableau.com/app/profile/avneesh.) and in Tableau_proj folder also as .twb files.
+- Use the SQL scripts for the following steps in **MySQL**.
+- Also, **Tableau Desktop** was used for creating visulizations. The workbooks are on [Tableau Public](https://public.tableau.com/app/profile/avneesh.) and in Tableau_proj folder as .twb files.
+
 
 **LOADING AND PROCESSING DATA**:
 
 - Open MySQL Workbench, and make a connection to the MySQL server.
-- USe the SQL script 'file_path': 
-	SHOW VARIABLES LIKE "secure_file_priv"
- ,and the results are shown, and a path is shown in the result.
+- USe the SQL script **'file_path'**:
+
+		SHOW VARIABLES LIKE "secure_file_priv"
+	
+ 	,and the results are shown, and a path is shown in the result.
 - Copy all the csv files to the path mentioned in the 'Value' field.
 - Create a new schema(database), and select it.
-- Then run the 'create' SQL script that creates and loads monthly data into the schema.
 
-*Create Table forms a structure to the table by providing the right data types and appropriate names.
-*Load Data mentions the path of the csv file to be copied into the table.
-*Fields Terminated shows that each field is terminated and separated by a comma(hence comma-separated values[csv]).
-*The first header row is omitted from copying.
-*A set statement handles all the invalid null values of double-type coordianates by assigning them NULL.
-*This is done for all the 12 month data.
+- Then run the **'create'** SQL script that creates and loads monthly data into the schema.
 
--Then the 'union' script is run, that makes a 12 month compiled data with extra month, weekday and ride length columns in appropraite order.
+***create.sql :***
+* Create Table forms a structure to the table by providing the right data types and appropriate names.
+* Load Data mentions the path of the csv file to be copied into the table.
+* Fields Terminated shows that each field is terminated and separated by a comma(hence comma-separated values[csv]).
+* The first header row is omitted from copying.
+* A set statement handles all the invalid null values of double-type coordianates by assigning them NULL.
+* This is done for all the 12 month data.
 
-*First the create table command sets the general structure of the compiles 2021 data(optional).
-*The innermost subquery returns all the union data of the year after combining monthly data end to end. This has an alibi of union
+- Then the **'union'** script is run, that makes a 12 month compiled data with extra month, weekday and ride length columns in appropraite order.
+
+***union.sql :***
+* First the create table command sets the general structure of the compiles 2021 data(optional).
+* The innermost subquery returns all the union data of the year after combining monthly data end to end. This has an alibi of union
 -table.
-*The outer subquery returns the extracted month, the number of weekday, and the ride length of the union data, along with all the other tables in the right order.
-*The ride length attribute/column is maintained within the truncated limits using only the subtraction of time values. [Note here negative values will be returned for trips contuining after midnight into the new da. This will be tackled by udating the table.]
-*This all is selected and moved to the permanent table 2021 compiled tripdata.
+* The outer subquery returns the extracted month, the number of weekday, and the ride length of the union data, along with all the other tables in the right order.
+* The ride length attribute/column is maintained within the truncated limits using only the subtraction of time values. [Note here negative values will be returned for trips contuining after midnight into the new da. This will be tackled by udating the table.]
+* This all is selected and moved to the permanent table 2021 compiled tripdata.
 
--The 'update_ride_length' SQL script will add 24 hrs to the negative ride_length to correct the ride_lengths.
+- The **'update_ride_length'** SQL script will add 24 hrs to the negative ride_length to correct the ride_lengths.
 
--Now the tripdata is ready to be cleaned and analyzed.
+- Now the tripdata is ready to be *cleaned* and *analyzed*.
 
-{CLEANING}:
--A select distinct count of primary key 'ride_id' compared to the select count of the same, shows how many duplicate ride_id's occur. (can be eliminated in analysis by using distinct):
-	SELECT COUNT(DISTINCT ride_id)
--The length of the ride_id if fixed can be checked for consistency.
--The member_casual or any other column can be used for analysis by trimming any extra whitespace(if any), as it can provide inconsistent results.
-	SELECT TRIM(member_casual)
--The data entries/rows having null values in the core analysis columns like: ride_id, started_at, ended_at, member_casual are eliminated by using:
-	WHERE column = NOT NULL
-	HAVING column = NOT NULL [use when GROUP BY is already used before]
--COALESCE/CASE/SET/NULLIF: For replacing null values that may be truncated for the data-type can be replaced by:
-	SELECT COALESCE(ride_length,'00:00:00') AS ride_length_new -or-
-	SELECT CASE WHEN ride_length IS NULL THEN '00:00:00' ELSE ride_length END AS ride_length_new -or-
-	SELECT NULLIF(ride_length,'00:00:00') AS ride_length_new -or-
-	UPDATE TABLE table_name SET ride_length= NULLIF(@vride_length,'') -or-
-	(@vride_length) SET ride_length= NULLIF(@vride_length,'')
-[The first 3 are while running an analysis query or creating table from query results(as already done in 'union' script), while the last two are done while updating table or creating table respectively(as already done in the 'create' script).]
 
-{ANALYSIS}:
--Open Tableau Desktop.
--Two ways exist to produce viz in Tableau:
-	. The results of the SQL script are used as 'dimension' values to create the viz.
-	. The whole dataset is loaded as the data source and 'measure' values such as count, sum, etc. are used to create viz [like in PivotCharts in Excel].
-- We follow the first as it is faster and SQL is used to write queries to the server data.
--Connect to the server 'MySQL'.
--Sign in to the server, and chose the schema created in MySQL as the database. Thus all the tables are available now to access and run queries in Tableau.
--The data source is the MySQL server and the database is chosen as the created schema.
--Use the option: New Custom SQL to run the SQL analysis scripts and automically load the results into the BI Sheet to visualize.
+**DATA CLEANING**:
+- A select distinct count of primary key *'ride_id'* compared to the select count of the same, shows how many duplicate ride_id's occur. (can be eliminated in analysis by using distinct):
 
-{Tableau viz + SQL scripts and analysis}:
+		SELECT COUNT(DISTINCT ride_id)
+	
+- The length of the ride_id if fixed can be checked for consistency.
+- The member_casual or any other column can be used for analysis by trimming any extra whitespace(if any), as it can provide inconsistent results.
 
-- First workbook created for avg ride lengths and number of trips over months of years using the 'analysis' script.
-* SHEET1--> Columns: month_of_year; Rows: SECOND(avg_ride_length) [Note: it is important to keep both as 'continuous' values for easier axis editing]; Color: member_casual [Assign as discrete value]; Graph type: Line.
-* SHEET2--> Columns: month_of_year; Rows: no_of_trips; Color: member_casual, Graph Type: Line.
-* DASHBOARD--> Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
+		SELECT TRIM(member_casual)
+
+- The data entries/rows having null values in the core analysis columns like: *ride_id*, *started_at*, *ended_at*, *member_casual* are eliminated by using:
+
+		WHERE column = NOT NULL
+		HAVING column = NOT NULL /*use when GROUP BY is already used before]*/
+	
+- COALESCE/CASE/SET/NULLIF: For replacing null values that may be truncated for the data-type can be replaced by:
+	
+		SELECT COALESCE(ride_length,'00:00:00') AS ride_length_new 					-or-
+		SELECT CASE WHEN ride_length IS NULL THEN '00:00:00' ELSE ride_length END AS ride_length_new 	-or-
+		SELECT NULLIF(ride_length,'00:00:00') AS ride_length_new 					-or-
+		UPDATE TABLE table_name SET ride_length= NULLIF(@vride_length,'')				-or-
+		(@vride_length) SET ride_length= NULLIF(@vride_length,'')
+		
+(The first 3 are while running an analysis query or creating table from query results(as already done in 'union' script), while the last two are done while updating table or creating table respectively(as already done in the 'create' script).)
+
+
+**ANALYSIS**:
+- Open **Tableau Desktop**.
+- Two ways exist to produce viz in Tableau:
+		
+		1) The results of the SQL script are used as 'dimension' values to create the viz.
+		2) The whole dataset is loaded as the data source and 'measure' values such as count, sum, etc. are used to create viz [like in PivotCharts in Excel].
+		
+(We follow the first as it is faster and SQL is used to write queries to the server data.)
+
+- Connect to the server **'MySQL'**.
+- Sign in to the **localhost** server as the **root** user, and chose the schema created in MySQL as the database. Thus all the tables are available now to access and run queries in Tableau.
+- The data source is the MySQL server and the database is chosen as the created schema.
+- Use the option: *New Custom SQL* to run the SQL analysis scripts and automically load the results into the BI Sheet to visualize.
+
+
+**TABLEAU VIZ's + SQL SCRIPTS and ANALYSIS**:
+
+[**WORKBOOK 1:**](https://public.tableau.com/app/profile/avneesh./viz/avg_month_analysis/Dashboard1) Created for avg ride lengths and number of trips over months of years using the 'analysis' script.
+
+*SHEET1*--> Columns: month_of_year; Rows: SECOND(avg_ride_length) [Note: it is important to keep both as 'continuous' values for easier axis editing]; Color: member_casual [Assign as discrete value]; Graph type: Line.
+*SHEET2*--> Columns: month_of_year; Rows: no_of_trips; Color: member_casual, Graph Type: Line.
+*DASHBOARD*--> Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
 * Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
-- Analysis:
+
+***Conclusions*** :
 * The no of trips taken across the year by both members and casuals has a peak in the middle of the year, ie, summers. While the trips drastically decrese during the winter months. This confirms the hypothesis that summers have  more number of riders and trips due to the breaks going in the period and also due to the fact it is a much more milder weather to usea  bike.
 * The casuals are more likely to take longer trips than members all throughout the year. Also, the average ride lengths of members are somewhat constant throughout the year, and can be highly likely due to the working and studying people availing membership. While the ride lengths of the casuals has a high during February and keeps decreasing further into year (even through summer). Thus this could be due to the reason more and more casual riders are already opting to avail membership, thus the average ride length is coming down through 2021.
 
-- Second workbook created for avg ride length and ride count over days of week.
-* SHEET1--> Columns: day_of_week; Rows: SECOND(avg_ride_lengthh) [Keep both continuous]; Color: member_casual [keep 'discrete']; Graph-type: Line.
-* SHEET2--> Columns: day_of_week; Rows: ride_cnt; Color: member_casual; Graph-type: Line.
-* DASHBOARD: Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
-Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
-- Analysis:
+[**WORKBOOK 2:**](https://public.tableau.com/app/profile/avneesh./viz/weekdays_analysis/Dashboard1) Created for avg ride length and ride count over days of week.
+*SHEET1*--> Columns: day_of_week; Rows: SECOND(avg_ride_lengthh) [Keep both continuous]; Color: member_casual [keep 'discrete']; Graph-type: Line.
+*SHEET2*--> Columns: day_of_week; Rows: ride_cnt; Color: member_casual; Graph-type: Line.
+*DASHBOARD*: Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
+* Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
+
+- ***Conclusions*** :
 * The number of rides taken by mbers have a overall constant trend throughout the week, with some dip on the weekends, showing the high percentage of students and working people. While for casual riders, Saturdays are the highest rides taken. The weekend(+Friday) trend shows significant increase from the weekdays, thus the tourist/leisure percentage of casual riders.
 * For members the avg ride length is almost constant with very slight increase on weekends, which could suggest that some members may find the bikes easier to commute the city for leisure purposes on weekends. While the average casual rides have a obvious rise on weekends and a dip on Wednesday and Thursday.
 
