@@ -1,0 +1,630 @@
+---
+title: "Chicago-Bike-analysis In SQL & Tableau"
+author: "Avneesh Singh"
+date: '2022-07-30'
+output: html_document
+---
+
+# bike-sharing-analysis with SQL and Tableau
+
+-   Before moving further, connect the MySQL database to the R-Markdown .Rmd file.
+
+-   We connect as an 'dbserver' host to the server in this markdown document, not 'localhost' as mentioned in the document. The latter is for Tableau Desktop & MySQL server connection.
+
+```{r}
+#install.packages("RMySQL")
+library(RMySQL)
+online_schema <- dbConnect(RMySQL::MySQL(), dbname='schema', username='onlineUser', password='********', host='******', port=3306)
+knitr::opts_chunk$set(connection = "online_schema")
+```
+
+-   If another user/host is created, create one in MySQL:
+
+    CREATE USER onlineUser IDENTIFIED WITH mysql_native_password BY 'password';
+
+-   Then open Server-\> Users and Privileges-\> onlineUser-\> and then set match host to the IP address, and then grant access of actions and database from the Administrative Roles/Schema privileges respectively.
+
+***Steps:*** - Use the SQL scripts for the following steps in **MySQL**.
+
+-   Also, **Tableau Desktop** was used for creating visualizations. The workbooks are on [***Tableau Public***](https://public.tableau.com/app/profile/avneesh.) and in [***Tableau_proj***](https://github.com/av-neesh/chicago-bikes-analysis/tree/main/SQL%2BTableau-analysis/Tableau_proj) folder as .twb files.
+
+**LOADING AND PROCESSING DATA**:
+
+-   Open MySQL Workbench, and make a connection to the MySQL server.
+
+-   Use the SQL script **'file_path'**:
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+SHOW VARIABLES LIKE "secure_file_priv"
+```
+
+,and the results are shown, and a path is shown in the result.
+
+-   Copy all the csv files to the path mentioned in the 'Value' field.
+
+-   Create a new schema(database), and select it.
+
+-   Then run the [**'create'**](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/create.sql) SQL script that creates and loads monthly data into the schema.
+
+[***create.sql***](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/create.sql) :
+
+-   Create Table forms a structure to the table by providing the right data types and appropriate names.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+CREATE TABLE divvy_tripdata_202101 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+```
+
+-   Load Data mentions the path of the csv file to be copied into the table.
+
+-   Fields Terminated shows that each field is terminated and separated by a comma(hence comma-separated values[csv]).
+
+-   The first header row is omitted from copying.
+
+-   A set statement handles all the invalid null values of double-type coordianates by assigning them NULL.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202101-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202101
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+```
+
+-   This is done for all the 12 month data.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+CREATE TABLE divvy_tripdata_202102 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202102-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202102
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202103 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202103-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202103
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202104 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202104-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202104
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202105 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202105-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202105
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202106 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202106-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202106
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202107 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202107-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202107
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202108 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202108-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202108
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+
+CREATE TABLE divvy_tripdata_202109 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202109-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202109
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202110 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202110-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202110
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202111 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202111-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202111
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+    
+CREATE TABLE divvy_tripdata_202112 (
+	ride_id VARCHAR(100), rideable_type VARCHAR(100),
+    started_at DATETIME, ended_at DATETIME,
+    start_station_name VARCHAR(100), start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100), end_station_id VARCHAR(100),
+    start_lat DOUBLE, start_lng DOUBLE,
+    end_lat DOUBLE, end_lng DOUBLE,
+    member_casual VARCHAR(100) );
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/202112-divvy-tripdata.csv' INTO TABLE divvy_tripdata_202112
+FIELDS TERMINATED BY ','
+IGNORE 1 LINES 
+(ride_id, rideable_type, started_at, ended_at, start_station_name, start_station_id, end_station_name, end_station_id, @vstart_lat, @start_lng, @vend_lat, @vend_lng, member_casual)
+SET start_lat= NULLIF(@vstart_lat,''),
+	start_lng= NULLIF(@start_lng,''),
+    end_lat= NULLIF(@vend_lat,''),
+    end_lng= NULLIF(@vend_lng,'') ;
+```
+
+-   Then the **'union'** script is run, that makes a 12 month compiled data with extra month, weekday and ride length columns in appropraite order.
+
+[***union.sql***](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/union.sql) :
+
+-   First the create table command sets the general structure of the compiles 2021 data(optional).
+
+-   The innermost sub-query returns all the union data of the year after combining monthly data end to end. This has an alibi of union -table.
+
+-   The outer sub-query returns the extracted month, the number of weekday, and the ride length of the union data, along with all the other tables in the right order.
+
+-   The ride length attribute/column is maintained within the truncated limits using only the subtraction of time values. [Note here negative values will be returned for trips continuing after midnight into the new da. This will be tackled by updating the table.]
+
+-   This all is selected and moved to the permanent table 2021 compiled tripdata.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+CREATE TABLE divvy_tripdata_2021 (	
+	ride_id VARCHAR(100),
+    rideable_type VARCHAR(100),
+    month_of_year INT,
+    day_of_week INT,
+    started_at DATETIME,
+    ended_at DATETIME,
+    ride_length TIME,
+    start_station_name VARCHAR(100),
+    start_station_id VARCHAR(100),
+    end_station_name VARCHAR(100),
+    end_station_id VARCHAR(100),
+    start_lat DOUBLE,
+    start_lng DOUBLE,
+    end_lat DOUBLE,
+    end_lng DOUBLE,
+    member_casual VARCHAR(100) 
+    )
+    SELECT *
+	FROM (
+		SELECT DISTINCT ride_id, rideable_type,
+			EXTRACT(MONTH FROM started_at) AS month_of_year,
+			WEEKDAY(started_at) AS day_of_week,
+			started_at, ended_at, 
+			TIMEDIFF(date_format(ended_at, '%H:%i:%s'), date_format(started_at, '%H:%i:%s'))  AS ride_length,
+			start_station_name, start_station_id,  end_station_name, end_station_id,
+			start_lat, start_lng, end_lat, end_lng,
+			member_casual
+		FROM (
+			SELECT *
+			FROM divvy_tripdata_202101
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202102
+			UNION
+			SELECT *
+			FROM divvy_tripdata_202103
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202104
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202105
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202106
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202107
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202108
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202109
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202110
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202111
+			UNION
+			SELECT * 
+			FROM divvy_tripdata_202112
+            ) union_table 
+		) full_table ;
+```
+
+-   The [**'update_ride_length'**](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/update_ride_lengths.sql) SQL script will add 24 hrs to the negative ride_length to correct the ride_lengths.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+UPDATE divvy_tripdata_2021
+SET ride_length= IF(ride_length<0, sec_to_time(time_to_sec(ride_length)+86400),ride_length)
+WHERE ride_id IS NOT NULL;
+```
+
+-   Now the tripdata is ready to be *cleaned* and *analyzed*.
+
+**DATA CLEANING**: - A select distinct count of primary key *'ride_id'* compared to the select count of the same, shows how many duplicate ride_id's occur. (can be eliminated in analysis by using distinct):
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+SELECT COUNT(DISTINCT ride_id)
+```
+
+-   The length of the ride_id if fixed can be checked for consistency.
+
+-   The member_casual or any other column can be used for analysis by trimming any extra whitespace(if any), as it can provide inconsistent results.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+SELECT TRIM(member_casual)
+```
+
+-   The data entries/rows having null values in the core analysis columns like: *ride_id*, *started_at*, *ended_at*, *member_casual* are eliminated by using:
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+WHERE column = NOT NULL
+HAVING column = NOT NULL /*use when GROUP BY is already used before]*/
+```
+
+-   COALESCE/CASE/SET/NULLIF: For replacing null values that may be truncated for the data-type can be replaced by:
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+SELECT COALESCE(ride_length,'00:00:00') AS ride_length_new                  
+    /*or*/
+SELECT CASE WHEN ride_length IS NULL THEN '00:00:00' ELSE ride_length END AS ride_length_new
+    /*or*/
+SELECT NULLIF(ride_length,'00:00:00') AS ride_length_new
+    /*or*/
+UPDATE TABLE table_name SET ride_length= NULLIF(@vride_length,'')
+    /*or*/
+(@vride_length) SET ride_length= NULLIF(@vride_length,'')
+```
+
+(The first 3 are while running an analysis query or creating table from query results(as already done in 'union' script), while the last two are done while updating table or creating table respectively(as already done in the 'create' script).)
+
+**ANALYSIS**: - Open **Tableau Desktop**. - Two ways exist to produce viz in Tableau:
+
+        1) The results of the SQL script are used as 'dimension' values to create the viz.
+        2) The whole dataset is loaded as the data source and 'measure' values such as count, sum, etc. are used to create viz [like in PivotCharts in Excel].
+        
+
+(We follow the first as it is faster and SQL is used to write queries to the server data.)
+
+-   Connect to the server **'MySQL'**.
+
+-   Sign in to the **localhost** server as the **root** user, and chose the schema created in MySQL as the database. Thus all the tables are available now to access and run queries in Tableau.
+
+-   The data source is the MySQL server and the database is chosen as the created schema.
+
+-   Use the option: *New Custom SQL* to run the SQL analysis scripts and automatically load the results into the BI Sheet to visualize.
+
+**TABLEAU VIZ's + SQL SCRIPTS and ANALYSIS**:
+
+[**WORKBOOK 1**](https://public.tableau.com/app/profile/avneesh./viz/avg_month_analysis/Dashboard1): Created for avg ride lengths and number of trips over months of years using the [***'analysis.sql'***](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/analysis.sql) script.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+/* Viz1 */
+SELECT month_of_year, member_casual,
+	COUNT(ride_id) AS no_of_trips,
+        sec_to_time(AVG(ride_length)) AS avg_ride_length
+FROM divvy_tripdata_2021
+GROUP BY member_casual, month_of_year;
+```
+
+*SHEET1*--\> Columns: month_of_year; Rows: SECOND(avg_ride_length) {Note: it is important to keep both as 'continuous' values for easier axis editing]; Color: member_casual {Assign as discrete value}; Graph type: Line.
+
+*SHEET2*--\> Columns: month_of_year; Rows: no_of_trips; Color: member_casual, Graph Type: Line.
+
+*DASHBOARD*--\> Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
+
+-   Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
+
+![Dashboard 1](https://user-images.githubusercontent.com/110298158/182020969-95cfc454-a0bb-4cff-a9a6-576cc742626c.png)
+
+***Conclusions*** :
+
+-   The no of trips taken across the year by both members and casuals has a peak in the middle of the year, ie, summers. While the trips drastically decrease during the winter months. This confirms the hypothesis that summers have more number of riders and trips due to the breaks going in the period and also due to the fact it is a much more milder weather to use bike.
+
+-   The casuals are more likely to take longer trips than members all throughout the year. Also, the average ride lengths of members are somewhat constant throughout the year, and can be highly likely due to the working and studying people availing membership. While the ride lengths of the casuals has a high during February and keeps decreasing further into year (even through summer). Thus this could be due to the reason more and more casual riders are already opting to avail membership, thus the average ride length is coming down through 2021.
+
+[**WORKBOOK 2**](https://public.tableau.com/app/profile/avneesh./viz/weekdays_analysis/Dashboard1): Created for avg ride length and ride count over days of week.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+/* Viz2 */
+SELECT day_of_week, member_casual,
+        COUNT(ride_id) AS ride_cnt,
+	sec_to_time(AVG(ride_length)) AS avg_ride_lengthh
+FROM divvy_tripdata_2021
+GROUP BY day_of_week, member_casual;
+```
+
+*SHEET1*--\> Columns: day_of_week; Rows: SECOND(avg_ride_lengthh) {Keep both continuous}; Color: member_casual {keep 'discrete'}; Graph-type: Line.
+
+*SHEET2*--\> Columns: day_of_week; Rows: ride_cnt; Color: member_casual; Graph-type: Line.
+
+*DASHBOARD*: Add a floating member casual color legend and both sheets to the dashboard in an up&down format.
+
+-   Format each axis for month from 0 to 6, and for other y-axis in both sheets to start from 0.
+
+![Dashboard 2](https://user-images.githubusercontent.com/110298158/182020996-70e43061-94a3-4776-b36b-43faa9e3a373.png)
+
+***Conclusions*** :
+
+-   The number of rides taken by members have a overall constant trend throughout the week, with some dip on the weekends, showing the high percentage of students and working people. While for casual riders, Saturdays are the highest rides taken. The weekend(+Friday) trend shows significant increase from the weekdays, thus the tourist/leisure percentage of casual riders.
+
+-   For members the avg ride length is almost constant with very slight increase on weekends, which could suggest that some members may find the bikes easier to commute the city for leisure purposes on weekends. While the average casual rides have a obvious rise on weekends and a dip on Wednesday and Thursday.
+
+[**WORKBOOK 3**](https://public.tableau.com/app/profile/avneesh./viz/most_pop_stations/Dashboard1): Shows the most used stations using the 'analysis' script.
+
+-   The script orders the ride stations as per where the longest rides take place.
+
+-   Give the lat and lng 'geographical roles' of latitude and longitude. And use graph type as 'Map'.
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+/* Viz3 */
+SELECT ride_id, member_casual, start_lat, start_lng, end_lat, end_lng
+FROM divvy_tripdata_2021
+WHERE start_lat IS NOT NULL AND start_lng IS NOT NULL AND end_lat IS NOT NULL AND end_lng IS NOT NULL
+ORDER BY sqrt((start_lat-end_lat)*(start_lat-end_lat)-(start_lng-end_lng)*(start_lng-end_lng)) DESC;
+```
+
+*SHEET1* --\> Detail: start_lat, start_lng {latitude and longitude will be genertated}, Color: member_casual with sorted acsending.
+
+*SHEET2*--\> Detail: start_lat, start_lng {latitude and longitude will be genertated}, Color: member_casual with sorted decsending.
+
+*SHEET3*--\> Detail: end_lat, end_lng {latitude and longitude will be genertated}, Color: member_casual with sorted acsending.
+
+*SHEET4*--\> Detail: end_lat, end_lng {latitude and longitude will be genertated}, Color: member_casual with sorted decsending.
+
+*DASHBOARD*--\> stations side by side and start and end up & down, with flaoting color legend.
+
+![Dashboard 3](https://user-images.githubusercontent.com/110298158/182018392-e1cfe933-42bb-4af7-8678-0faf4af93e76.png)
+
+***Conclusions*** :
+
+-   The visualization suggests that most of the members start and end their rides in the urban areas of the cities, not going far from the main city. While for casuals, most of rides though they start from the inner city, the rides are likely to end at suburban and outer parts of the city.
+
+[**SQL SCRIPT**](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/analysis.sql) We also run a SQL query to find out the most popular bike ride routes for both casuals and members. Here are the results:
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+/* SQL1 */
+SELECT COUNT(ride_id) AS ride_count, sec_to_time(AVG(ride_length)) AS avg_ride_l, member_casual, CONCAT(start_station_name, " to ", end_station_name) AS route
+FROM divvy_tripdata_2021
+GROUP BY member_casual, route
+ORDER BY ride_count DESC, member_casual
+LIMIT 10; /*optional to run*/
+
+SELECT COUNT(ride_id) AS ride_count, sec_to_time(AVG(ride_length)) AS avg_ride_l, member_casual, CONCAT(start_station_name, " to ", end_station_name) AS route
+FROM divvy_tripdata_2021
+WHERE member_casual LIKE '%member%'
+GROUP BY route
+ORDER BY ride_count DESC
+LIMIT 10; /*count for members*/
+
+SELECT COUNT(ride_id) AS ride_count, sec_to_time(AVG(ride_length)) AS avg_ride_l, member_casual, CONCAT(start_station_name, " to ", end_station_name) AS route
+FROM divvy_tripdata_2021
+WHERE member_casual LIKE '%casual%'
+GROUP BY route
+ORDER BY ride_count DESC
+LIMIT 10; /*count for casuals*/
+```
+
+**Members**: [CSV Table](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/Tables/member_pop_routes.csv)
+
+    ride_count, avg_ride,   member_casual,  route
+    221070,     00:20:55,   member,     to 
+    4082,       00:10:06,   member,     Ellis Ave & 60th St to Ellis Ave & 55th St
+    3652,       00:09:51,   member,     Ellis Ave & 55th St to Ellis Ave & 60th St
+    3109,       00:09:53,   member,     Ellis Ave & 60th St to University Ave & 57th St
+    3010,       00:08:43,   member,     University Ave & 57th St to Ellis Ave & 60th St
+    1989,       00:06:27,   member,     Calumet Ave & 33rd St to State St & 33rd St
+    1962,       00:29:29,   member,     University Ave & 57th St to 
+    1954,       00:07:15,   member,     State St & 33rd St to Calumet Ave & 33rd St
+    1860,       00:08:48,   member,     Loomis St & Lexington St to Morgan St & Polk St
+    1809,       00:15:10,   member,     Ellis Ave & 60th St to 
+
+**Casuals**: [CSV Table](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/SQL%2BTableau-analysis/SQL_scripts/Tables/casual_pop_routes.csv)
+
+    ride_count, avg_ride,   member_casual,  route
+    202148,     00:34:12,   casual,     to 
+    11683,      01:47:09,   casual,     Streeter Dr & Grand Ave to Streeter Dr & Grand Ave
+    6111,       01:46:29,   casual,     Millennium Park to Millennium Park
+    5900,       02:00:39,   casual,     Michigan Ave & Oak St to Michigan Ave & Oak St
+    4669,       01:34:21,   casual,     Lake Shore Dr & Monroe to Lake Shore Dr & Monroe
+    3445,       02:07:18,   casual,     Buckingham Fountain to Buckingham Fountain
+    3309,       01:07:36,   casual,     Streeter Dr & Grand Ave to Millennium Park
+    3219,       01:53:20,   casual,     Theater on the Lake to Theater on the Lake
+    3116,       01:26:25,   casual,     DuSable Lake Shore Dr & Monroe St to 'same'
+    3028,       02:11:14,   casual,     Montrose Harbor to Montrose Harbor
+
+{Ignore the null station_values this are tackled with [**R analysis**](https://github.com/av-neesh/chicago-bikes-analysis/tree/main/R-analysis)}
+
+***Conclusions*** :
+
+-   The top most popular routes taken by members are short(as compared to the casual riders), and reciprocals(ie, the end point of one route is the starting point of another route and vice versa). Also most of the most popular routes are between residential areas and universities/work hubs of the city.
+
+-   The top most popular routes for casual riders are quite long and also between various tourists spots in Chicago. Also some of the top 10 popular routes are complete round trips(ie, the starting points are also the ending points, showing that the trips were ended from where they started after a long trip).
+
+[**WORKBOOK 4**](https://public.tableau.com/app/profile/avneesh./viz/route_distribution/Dashboard1): Shows the distribution of casual and member most popular routes.
+
+```{sql connection= online_online_schema, output.var= "report_model_by_make"}
+/* Viz4 */
+SELECT COUNT(ride_id) AS ride_count, sec_to_time(AVG(ride_length)) AS avg_ride_l, member_casual, CONCAT(start_station_name, " to ", end_station_name) AS route
+FROM divvy_tripdata_2021
+GROUP BY route
+ORDER BY ride_count DESC
+LIMIT 100;
+```
+
+*SHEET1*--\> Columns: route {Sort route By Field in a descending order by Count of ride_count}; Rows: SECOND(avg_ride_l), ride_count {keep both continuous}; Color: member_casual; Filter: route {remove null station values}, member_casual {in this sheet keep member}
+
+*SHEET2*--\> Duplicate the sheet1 and change the filter to casual only.
+
+*DASHBOARD*--\> Make a side-by-side of both sheets without the legends or filter.
+
+![Dashboard 4](https://user-images.githubusercontent.com/110298158/182021043-5bc383dd-8d35-4d91-9329-680162a970e4.png)
+
+***Conclusions :***
+
+-   It is evident that the casual avg rides of popular routes is greater than that of members. Also the distribution for casuals is much flatter, which means there is less difference between the popularity of routes, whereas the member popular routes are much more few and prominent.
+
+[**WORKBOOK 5**](https://public.tableau.com/app/profile/avneesh./viz/popular_routes_path/Dashboard1): Aims to describe the paths of the most popular routes.
+
+-   Run the custom SQL script in Tableau. This script is similar as that of the 3rd workbook created, but the complete round trips are omited by the WHERE condition. Also the results are limited to 250 rows only to avoid the intensive process.
+
+-   Create a **'Calculated Field'** by right-clicking any field in the query result schema preview.
+
+-   The formula using the spatial functions to form the calculated fields will be:
+
+          1. MAKEPOINT([start_lat],[start_lng]) as the 'start_point';
+          2. MAKEPOINT([end_lat],[end_lng]) as the 'end_point'.
+          3. MAKELINE([start_point],[end_point]) as the 'route_line'.
+
+-   And the analysis script used is:
+
+```{sql connection= online_schema, output.var= "report_model_by_make"}
+
+/* Viz5 */
+SELECT ride_id, member_casual, start_lat, start_lng, end_lat, end_lng
+FROM divvy_tripdata_2021
+WHERE member_casual LIKE '%casual%' AND start_lat IS NOT NULL AND start_lng IS NOT NULL AND end_lat IS NOT NULL AND end_lng IS NOT NULL AND start_lat != end_lat AND start_lng != end_lng
+ORDER BY sqrt((end_lat-start_lat)*(end_lat-start_lat)-(end_lng-start_lng)*(end_lng-start_lng)) DESC
+LIMIT 250; /*use to extract casual routes*/
+
+SELECT ride_id, member_casual, start_lat, start_lng, end_lat, end_lng
+FROM divvy_tripdata_2021
+WHERE member_casual LIKE '%member%' AND start_lat IS NOT NULL AND start_lng IS NOT NULL AND end_lat IS NOT NULL AND end_lng IS NOT NULL AND start_lat != end_lat AND start_lng != end_lng
+ORDER BY sqrt((end_lat-start_lat)*(end_lat-start_lat)-(end_lng-start_lng)*(end_lng-start_lng)) DESC
+LIMIT 250; /*use to extract member routes*/
+```
+
+*SHEET*--\> Drag and drop the line onto the sheet. Also drop the start and end points onto the sheet as a **'Marks'** layer. Colour: member_casual.
+
+![Dashboard 5 casual](https://user-images.githubusercontent.com/110298158/182021060-57e6fe04-eb18-4907-b753-aa0da59c8c0c.png)
+
+![Dashboard 5 member](https://user-images.githubusercontent.com/110298158/182021085-84250507-2ea5-4671-93b1-4677121fe057.png)
+
+***Conclusions :***
+
+-   It is not very evident as only top 250 rides were taken into account. Most of the rides are concentrated on the harbor.
+
+-   This problem is in [**R analysis**](https://github.com/av-neesh/chicago-bikes-analysis/tree/main/R-analysis), where [**ggmap viz's**](https://github.com/av-neesh/chicago-bikes-analysis/blob/main/R-analysis/R_Plots/pop_routes_usertype.png) can be created very effectively.
