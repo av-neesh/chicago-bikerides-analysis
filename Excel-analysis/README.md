@@ -161,10 +161,88 @@ The hourly trend on a average day from the month, shows the following:
 - The number of rides increases throughout the year, with a plateauing towards September (check for the same above SQL and R plots).
 - Both member and casual rides increase, but percentage-wise casual rides significantly increase towards September. (inspect member %s throughout year)
 - The classic_bike remains the most popular throughout year and fairly constant %s of rides are riden in them despite the increasing ride numbers: that could hint towards **constant riders taking more trips through the year rather than all new rides coming from new riders**.
-- **(from ride_length dist plots)**---> 6/8; 10/7; 11/9; 10/7: approx modes for casual/member throughout months---> as evident in the middle of the year, riders prefer to take longer rides, which could be due to members and casuals taking leisure rides due to the middle year breaks.
-- **(from rideable type plots)**---> Little to no docked bikes were used by members in the following months. More classic and docked bike rides were taken by casuals as compared to electric bikes, with a peak in middle of the year.
-- **(from station ride_count plots)**---> The correlation between casual/member popularity of stations kept increasing and had a peak around the middle of the year, suggesting that the mid-year breaks attracted many members to the same stations as casuals started due to the specific leisure routes,etc.
-- **(from avg_day plots)**---> For members, the trend for all months is same as January. For casuals, the peak has shifted towards the 5-6pm evening time.
-- **(from avg_week plots)**---> The avg week shows the same trend as January across all months. The casual rides increase on weekends, while member average rides are constant across the week.
+
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/ride_length_dist-012021.png width="500" title="January">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/ride_length_dist-032021.png width="500" title="March">
+</p>
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/ride_length_dist-062021.png width="500" title="June">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/ride_length_dist-092021.png width="500" title="September">
+</p>
+
+**From ride_length dist plots** ---> 6/8; 10/7; 11/9; 10/7: approx modes for casual/member throughout months--->
+- As evident in the middle of the year, riders prefer to take longer rides, which could be due to members and casuals taking leisure rides due to the middle year breaks.
+
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/rideable_type_avg_ride-012021.png width="500" title="January">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/rideable_type_avg_ride-032021.png width="500" title="March">
+</p>
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/rideable_type_avg_ride-062021.png width="500" title="June">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/rideable_type_avg_ride-092021.png width="500" title="September">
+</p>
+
+**From rideable type plots** --->
+- Little to no docked bikes were used by members in the following months. More classic and docked bike rides were taken by casuals as compared to electric bikes, with a peak in middle of the year.
+
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/station_ride_count-012021.png width="500" title="January">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/station_ride_count-032021.png width="500" title="March">
+</p>
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/station_ride_count-062021.png width="500" title="June">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/station_ride_count-092021.png width="500" title="September">
+</p>
+	
+**From station ride_count plots** --->
+- The correlation between casual/member popularity of stations kept increasing and had a peak around the middle of the year, suggesting that the mid-year breaks attracted many members to the same stations as casuals started due to the specific leisure routes,etc.
+
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_day-012021.png width="500" title="January">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_day-032021.png width="500" title="March">
+</p>
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_day-062021.png width="500" title="June">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_day-092021.png width="500" title="September">
+</p>
+	
+**From avg_day plots** --->
+- For members, the trend for all months is same as January. For casuals, the peak has shifted towards the 5-6pm evening time.
+
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_week-012021.png width="500" title="January">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_week-032021.png width="500" title="March">
+</p>
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_week-062021.png width="500" title="June">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_week-092021.png width="500" title="September">
+</p>
+
+**From avg_week plots** --->
+- The avg week shows the same trend as January across all months. The casual rides increase on weekends, while member average rides are constant across the week.
 - More member rides are taken in the middle of the week (in the subsequent months to January), but keep the average ride length constant, suggesting that work going/students are more confident to take a bike in the middle of the week.
-- **(from avg_month)**---> The avg month shows almost the same trend as January across all months. The average member ride_lengths remains constants with slight increases on weekends due to slightly longer rides taken(while the number of rides almost remain constant), while casual average ride_lengths & number of rides hugely increase on weekends.
+	
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_month-012021.png width="500" title="January">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_month-032021.png width="500" title="March">
+</p>
+<p align="left">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_month-062021.png width="500" title="June">
+<align="right">
+  <img src=https://github.com/av-neesh/chicago-bikerides-analysis/blob/main/Excel-analysis/Pivot_Plots/avg_month-092021.png width="500" title="September">
+</p>
+	
+**From avg_month** --->
+- The avg month shows almost the same trend as January across all months. The average member ride_lengths remains constants with slight increases on weekends due to slightly longer rides taken(while the number of rides almost remain constant), while casual average ride_lengths & number of rides hugely increase on weekends.
