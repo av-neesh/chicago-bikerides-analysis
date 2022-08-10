@@ -10,7 +10,7 @@ I have used 4 tools to analyse the data, and documented my steps and findings:
 
 ### **THE TASK:**
 
-We want to understand how casual users and riders with annual membership use their service differently and decude interesting and insightful patterns in their bike usage. From these insights, a new marketing strategy can be to developed to boost the bike sharing company's future success.
+We want to understand how casual users and riders with annual membership use their service differently and deduce interesting and insightful patterns in their bike usage. From these insights, a new marketing strategy can be to developed to boost the bike sharing company's future success.
 So we have to analyse the bike-sharing data and back our findings with **compelling data insights** and **professional data visualizations**, or answer the question:
 
 **What could motivate the “casual” users to change to an annual subscription based on their behavior?**
